@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.FtpClient" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/text_black</item>
+        <item name="colorPrimaryVariant">@color/text_black</item>
+        <item name="colorOnPrimary">@color/bg_white</item>
+        <item name="colorSecondary">@color/text_black</item>
+        <item name="colorOnSecondary">@color/bg_white</item>
+        <item name="android:colorBackground">@color/bg_white</item>
+        <item name="colorSurface">@color/bg_white</item>
+
+        <!-- Disable window animations for e-ink (reduces ghosting) -->
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <!-- Large text defaults -->
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+</resources>

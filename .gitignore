@@ -1,0 +1,42 @@
+# ==========================================
+# Gradle Build Outputs & Caches
+# ==========================================
+.gradle/
+build/
+/*/build/
+bin/
+gen/
+out/
+
+# ==========================================
+# Compiled Android Artifacts
+# ==========================================
+*.apk
+*.aar
+*.ap_
+*.aab
+*.dex
+*.class
+
+# ==========================================
+# Local Machine Configurations (Do Not Share)
+# ==========================================
+# Contains local absolute paths to Android SDK/NDK
+local.properties
+
+# ==========================================
+# System & Log Files
+# ==========================================
+*.log
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Security & Signing Keys (NEVER Commit)
+# ==========================================
+*.jks
+*.keystore
+*.p12
+*.pk8
+*.pem
+

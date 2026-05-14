@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_white"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FTP CLIENT"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_black"
+            android:letterSpacing="0.15"
+            android:paddingBottom="4dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/text_black"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Host -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SERVER HOST"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_black"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etHost"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="192.168.1.100 or ftp.example.com"
+            android:inputType="textUri"
+            android:textSize="18sp"
+            android:textColor="@color/text_black"
+            android:background="@drawable/border_box"
+            android:padding="12dp"
+            android:singleLine="true"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Port -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PORT"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_black"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etPort"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:hint="21"
+            android:text="21"
+            android:inputType="number"
+            android:textSize="18sp"
+            android:textColor="@color/text_black"
+            android:background="@drawable/border_box"
+            android:padding="12dp"
+            android:singleLine="true"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Username -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="USERNAME"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_black"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="anonymous"
+            android:inputType="text"
+            android:textSize="18sp"
+            android:textColor="@color/text_black"
+            android:background="@drawable/border_box"
+            android:padding="12dp"
+            android:singleLine="true"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Password -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="PASSWORD"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_black"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="(leave blank for anonymous)"
+            android:inputType="textPassword"
+            android:textSize="18sp"
+            android:textColor="@color/text_black"
+            android:background="@drawable/border_box"
+            android:padding="12dp"
+            android:singleLine="true"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Passive Mode -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="28dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Passive Mode (PASV)"
+                android:textSize="16sp"
+                android:textColor="@color/text_black" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchPassive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+        </LinearLayout>
+
+        <!-- Connect Button -->
+        <Button
+            android:id="@+id/btnConnect"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:text="Connect"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/bg_white"
+            android:backgroundTint="@color/text_black"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Progress -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Status / Error -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text_black"
+            android:background="@drawable/border_box"
+            android:padding="12dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+</ScrollView>
