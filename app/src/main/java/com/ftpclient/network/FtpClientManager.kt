@@ -135,6 +135,8 @@ class FtpClientManager {
             if (ftpClient.isConnected) {
                 ftpClient.logout()
                 ftpClient.disconnect()
+            } else {
+                // not connected. nothing to do
             }
         } catch (e: Exception) {
             Log.e(TAG, "Disconnect error", e)
