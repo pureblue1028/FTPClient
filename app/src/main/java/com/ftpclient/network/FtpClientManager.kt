@@ -30,10 +30,12 @@ class FtpClientManager {
             }
 
             ftpClient.connectTimeout = 15_000
-            ftpClient.soTimeout = 30_000
             ftpClient.defaultTimeout = 15_000
 
             ftpClient.connect(config.host, config.port)
+
+            //soTimeout should be set after connect.
+            ftpClient.soTimeout = 30_000
 
             val replyCode = ftpClient.replyCode
             if (!FTPReply.isPositiveCompletion(replyCode)) {
@@ -48,6 +50,7 @@ class FtpClientManager {
             }
 
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE)
+            ftpClient.controlEncoding = "UTF-8"
 
             if (config.passiveMode) {
                 ftpClient.enterLocalPassiveMode()
