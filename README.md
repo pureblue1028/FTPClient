@@ -70,12 +70,13 @@ Downloads are saved to:
 ```
 This is the standard Android public Downloads folder. Files are accessible from any file manager.
 
-## Limitations (v1.0)
+## Limitations (v0.1)
 - FTP only (no FTPS/SFTP)
 - No upload support
 - No multi-file selection
 - Fixed download directory
 - Single active download at a time
+- Hardcoded encoding as UTF-8
 
 ## Potential Future Features
 - FTPS (explicit/implicit TLS)
