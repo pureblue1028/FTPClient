@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.ftpclient.R
 import com.ftpclient.databinding.ActivityLoginBinding
 import com.ftpclient.model.FtpConfig
 import com.ftpclient.utils.PrefsHelper
@@ -26,12 +27,18 @@ class LoginActivity : AppCompatActivity() {
         prefs.loadConfig()?.let { populateFields(it) }
 
         binding.btnConnect.setOnClickListener {
+            val encoding = when (binding.rgEncoding.checkedRadioButtonId) {
+                R.id.rbGbk -> "GBK"
+                R.id.rbLatin1 -> "ISO-8859-1"
+                else -> "UTF-8"
+            }
             viewModel.connect(
                 host = binding.etHost.text.toString(),
                 portStr = binding.etPort.text.toString(),
                 username = binding.etUsername.text.toString(),
                 password = binding.etPassword.text.toString(),
-                passive = binding.switchPassive.isChecked
+                passive = binding.switchPassive.isChecked,
+                encoding = encoding
             )
         }
 
@@ -51,6 +58,11 @@ class LoginActivity : AppCompatActivity() {
         binding.etUsername.setText(config.username)
         binding.etPassword.setText(config.password)
         binding.switchPassive.isChecked = config.passiveMode
+        when (config.encoding) {
+            "GBK" -> binding.rbGbk.isChecked = true
+            "ISO-8859-1" -> binding.rbLatin1.isChecked = true
+            else -> binding.rbUtf8.isChecked = true
+        }
     }
 
     private fun showIdle() {

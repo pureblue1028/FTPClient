@@ -50,7 +50,9 @@ class FtpClientManager {
             }
 
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE)
-            ftpClient.controlEncoding = "UTF-8"
+
+            // Use encoding from config (UTF-8, GBK, ISO-8859-1, etc.)
+            ftpClient.controlEncoding = config.encoding
 
             if (config.passiveMode) {
                 ftpClient.enterLocalPassiveMode()
@@ -106,7 +108,12 @@ class FtpClientManager {
     ): FtpResult<File> = withContext(Dispatchers.IO) {
         try {
             // Get file size first
-            val fileSize = ftpClient.mlistFile(remotePath)?.size ?: 0L
+            //val fileSize = ftpClient.mlistFile(remotePath)?.size ?: 0L
+            val fileSize = try {
+                ftpClient.mlistFile(remotePath)?.size ?: 0L
+            } catch (e: Exception) {
+                0L  // For the case that MLST is not supported by server
+            }
 
             val localFile = File(localDir, fileName)
             localFile.parentFile?.mkdirs()

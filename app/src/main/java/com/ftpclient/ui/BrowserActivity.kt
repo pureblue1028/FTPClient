@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.os.Environment
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ftpclient.databinding.ActivityBrowserBinding
 import com.ftpclient.model.FtpEntry
+import com.ftpclient.utils.PrefsHelper
 import com.ftpclient.viewmodel.BrowserState
 import com.ftpclient.viewmodel.BrowserViewModel
 import com.ftpclient.viewmodel.BrowserViewModelFactory
@@ -20,28 +22,41 @@ class BrowserActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBrowserBinding
     private lateinit var viewModel: BrowserViewModel
     private lateinit var adapter: FileListAdapter
+    private lateinit var prefs: PrefsHelper
 
-    private val downloadDir: String
-        get() = Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_DOWNLOADS
-        ).absolutePath
+    // Available download directories
+    private val downloadDirs by lazy {
+        listOf(
+            "Downloads" to Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath,
+            "Documents" to Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath,
+            "Music"     to Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).absolutePath,
+            "Pictures"  to Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath,
+            "Movies"    to Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath,
+        )
+    }
+
+    private var downloadDir: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBrowserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Get the shared FtpClientManager from the LoginViewModel via the Application
-        // For simplicity, use a companion object singleton approach
-        val ftpManager = FtpManagerHolder.ftpManager
-            ?: run { finish(); return }
+        prefs = PrefsHelper(this)
 
+        val defaultDir = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_DOWNLOADS
+        ).absolutePath
+        downloadDir = prefs.loadDownloadDir(defaultDir)
+
+        val ftpManager = FtpManagerHolder.ftpManager ?: run { finish(); return }
         val factory = BrowserViewModelFactory(ftpManager)
         viewModel = ViewModelProvider(this, factory)[BrowserViewModel::class.java]
 
         setupRecyclerView()
         setupToolbar()
         observeStates()
+        updateDirLabel()
 
         if (savedInstanceState == null) {
             viewModel.navigateTo("/")
@@ -67,6 +82,9 @@ class BrowserActivity : AppCompatActivity() {
         binding.btnRefresh.setOnClickListener {
             viewModel.refresh()
         }
+        binding.btnChooseDir.setOnClickListener {
+            showDirectoryPicker()
+        }
         setSupportActionBar(binding.toolbar)
     }
 
@@ -85,7 +103,6 @@ class BrowserActivity : AppCompatActivity() {
                     binding.tvError.visibility = View.GONE
                     updatePathBar(state.path)
                     binding.btnUp.isEnabled = viewModel.canGoUp
-
                     if (state.entries.isEmpty()) {
                         binding.recyclerView.visibility = View.GONE
                         binding.tvEmpty.visibility = View.VISIBLE
@@ -112,7 +129,7 @@ class BrowserActivity : AppCompatActivity() {
                 is DownloadState.Downloading -> showDownloadProgress(state)
                 is DownloadState.Success -> {
                     hideDownloadOverlay()
-                    Toast.makeText(this, "Saved to Downloads/${state.fileName}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Saved: ${state.localPath}", Toast.LENGTH_LONG).show()
                     viewModel.resetDownloadState()
                 }
                 is DownloadState.Error -> {
@@ -129,14 +146,35 @@ class BrowserActivity : AppCompatActivity() {
         supportActionBar?.title = path.substringAfterLast('/').ifBlank { "/" }
     }
 
+    private fun updateDirLabel() {
+        val name = downloadDirs.find { it.second == downloadDir }?.first ?: "Custom"
+        binding.btnChooseDir.text = "[$name]"
+    }
+
     private fun confirmDownload(entry: FtpEntry) {
-        androidx.appcompat.app.AlertDialog.Builder(this)
+        AlertDialog.Builder(this)
             .setTitle("Download File")
-            .setMessage("Download \"${entry.name}\" (${entry.displaySize}) to Downloads?")
+            .setMessage("Download \"${entry.name}\" (${entry.displaySize}) to $downloadDir ?")
             .setPositiveButton("Download") { _, _ ->
                 viewModel.downloadFile(entry, downloadDir)
             }
             .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showDirectoryPicker() {
+        val labels = downloadDirs.map { (name, path) ->
+            if (path == downloadDir) ">> $name <<" else name
+        }.toTypedArray()
+
+        AlertDialog.Builder(this)
+            .setTitle("Select Download Directory")
+            .setItems(labels) { _, index ->
+                downloadDir = downloadDirs[index].second
+                prefs.saveDownloadDir(downloadDir)
+                updateDirLabel()
+                Toast.makeText(this, "Save to: ${downloadDirs[index].first}", Toast.LENGTH_SHORT).show()
+            }
             .show()
     }
 
