@@ -5,7 +5,8 @@ data class FtpConfig(
     val port: Int = 21,
     val username: String,
     val password: String,
-    val passiveMode: Boolean = true
+    val passiveMode: Boolean = true,
+    val encoding: String = "UTF-8"
 )
 
 data class FtpEntry(

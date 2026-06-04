@@ -14,6 +14,7 @@ class PrefsHelper(context: Context) {
             .putString("username", config.username)
             .putString("password", config.password)
             .putBoolean("passive", config.passiveMode)
+            .putString("encoding", config.encoding)
             .apply()
     }
 
@@ -24,7 +25,16 @@ class PrefsHelper(context: Context) {
             port = prefs.getInt("port", 21),
             username = prefs.getString("username", "anonymous") ?: "anonymous",
             password = prefs.getString("password", "") ?: "",
-            passiveMode = prefs.getBoolean("passive", true)
+            passiveMode = prefs.getBoolean("passive", true),
+            encoding = prefs.getString("encoding", "UTF-8") ?: "UTF-8"
         )
+    }
+
+    fun saveDownloadDir(dir: String) {
+        prefs.edit().putString("download_dir", dir).apply()
+    }
+
+    fun loadDownloadDir(defaultDir: String): String {
+        return prefs.getString("download_dir", defaultDir) ?: defaultDir
     }
 }

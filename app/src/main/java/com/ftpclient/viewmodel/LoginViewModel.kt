@@ -23,14 +23,21 @@ class LoginViewModel : ViewModel() {
     private val _loginState = MutableLiveData<LoginState>(LoginState.Idle)
     val loginState: LiveData<LoginState> = _loginState
 
-    fun connect(host: String, portStr: String, username: String, password: String, passive: Boolean) {
+    fun connect(
+        host: String,
+        portStr: String,
+        username: String,
+        password: String,
+        passive: Boolean,
+        encoding: String = "UTF-8"
+    ) {
         val port = portStr.toIntOrNull()
         if (host.isBlank()) {
             _loginState.value = LoginState.Error("Host cannot be empty")
             return
         }
         if (port == null || port !in 1..65535) {
-            _loginState.value = LoginState.Error("Invalid port number (1–65535)")
+            _loginState.value = LoginState.Error("Invalid port number (1 - 65535)")
             return
         }
 
@@ -39,7 +46,8 @@ class LoginViewModel : ViewModel() {
             port = port,
             username = username.trim().ifBlank { "anonymous" },
             password = password,
-            passiveMode = passive
+            passiveMode = passive,
+            encoding = encoding
         )
 
         _loginState.value = LoginState.Connecting

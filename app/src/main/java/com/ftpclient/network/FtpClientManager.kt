@@ -32,6 +32,10 @@ class FtpClientManager {
             ftpClient.connectTimeout = 15_000
             ftpClient.defaultTimeout = 15_000
 
+            // This must be set before calling `connect()`,
+            // otherwise the internal writer encoding will not take effect. (Need more study...)
+            ftpClient.controlEncoding = config.encoding
+
             ftpClient.connect(config.host, config.port)
 
             //soTimeout should be set after connect.
@@ -49,8 +53,21 @@ class FtpClientManager {
                 return@withContext FtpResult.Error("Login failed. Check username and password.")
             }
 
+            // Send an additional OPTS message to UTF-8 servers
+            // to ensure that the server also processes commands using UTF-8
+            if (config.encoding.equals("UTF-8", ignoreCase = true)) {
+                try {
+                    ftpClient.sendCommand("OPTS UTF8 ON")
+                    Log.d(TAG, "OPTS UTF8: ${ftpClient.replyString?.trim()}")
+                } catch (e: Exception) {
+                    Log.d(TAG, "Server does not support OPTS UTF8, continuing")
+                }
+            }
+
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE)
-            ftpClient.controlEncoding = "UTF-8"
+
+            // Use encoding from config (UTF-8, GBK, ISO-8859-1, etc.)
+            ftpClient.controlEncoding = config.encoding
 
             if (config.passiveMode) {
                 ftpClient.enterLocalPassiveMode()
@@ -106,7 +123,12 @@ class FtpClientManager {
     ): FtpResult<File> = withContext(Dispatchers.IO) {
         try {
             // Get file size first
-            val fileSize = ftpClient.mlistFile(remotePath)?.size ?: 0L
+            //val fileSize = ftpClient.mlistFile(remotePath)?.size ?: 0L
+            val fileSize = try {
+                ftpClient.mlistFile(remotePath)?.size ?: 0L
+            } catch (e: Exception) {
+                0L  // For the case that MLST is not supported by server
+            }
 
             val localFile = File(localDir, fileName)
             localFile.parentFile?.mkdirs()
