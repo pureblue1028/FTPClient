@@ -15,33 +15,34 @@
 
     <!-- Path bar + navigation buttons -->
     <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/bg_white"
         android:gravity="center_vertical"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp">
+        android:padding="8dp">
 
         <!-- Up button -->
         <Button
             android:id="@+id/btnUp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:text="[ .. ]"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="@color/text_black"
-            android:backgroundTint="@color/bg_white"
-            android:enabled="false" />
+            android:enabled="false"
+            android:layout_marginEnd="4dp"
+            app:strokeColor="@color/text_black"
+            app:strokeWidth="2dp" />
 
         <!-- Current path -->
         <TextView
             android:id="@+id/tvPath"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="44dp"
             android:layout_weight="1"
             android:text="/"
             android:textSize="13sp"
@@ -49,30 +50,39 @@
             android:singleLine="true"
             android:ellipsize="start"
             android:fontFamily="monospace"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp" />
+            android:background="@drawable/border_box"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="4dp" />
 
         <!-- Choose download dir -->
         <Button
             android:id="@+id/btnChooseDir"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:text="[Downloads]"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="@color/text_black"
-            android:backgroundTint="@color/bg_white" />
+            android:layout_marginEnd="4dp"
+            app:strokeColor="@color/text_black"
+            app:strokeWidth="2dp" />
 
         <!-- Refresh -->
         <Button
             android:id="@+id/btnRefresh"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:text="[R]"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="@color/text_black"
-            android:backgroundTint="@color/bg_white" />
+            app:strokeColor="@color/text_black"
+            app:strokeWidth="2dp" />
+
     </LinearLayout>
 
     <!-- Divider -->
